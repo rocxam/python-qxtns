@@ -1,0 +1,146 @@
+# QUESTION 3: SMALL BUSINESS SALES PERFORMANCE MONITOR
+
+# Supplied dataset
+sales = [
+    ("Monday", "Alice", "Samsung", 1200000),
+    ("Monday", "Brian", "Tecno", 850000),
+    ("Tuesday", "Alice", "iPhone", 2500000),
+    ("Tuesday", "Charles", "Samsung", 1100000),
+    ("Wednesday", "Brian", "Infinix", 900000),
+    ("Wednesday", "Alice", "Samsung", 1600000),
+    ("Thursday", "Charles", "Tecno", 700000),
+    ("Friday", "Brian", "Samsung", 2300000)
+]
+
+# Additional test dataset with edge cases
+sales_test = [
+    ("Monday", "Alice", "Samsung", 1200000),
+    ("Monday", "Brian", "Tecno", 850000),
+    ("Tuesday", "Alice", "iPhone", 2500000),
+    ("Tuesday", "Charles", "Samsung", 1100000),
+    ("Wednesday", "Brian", "Infinix", 900000),
+    ("Wednesday", "Alice", "Samsung", 1600000),
+    ("Thursday", "Charles", "Tecno", 700000),
+    ("Friday", "Brian", "Samsung", 2300000),
+    ("Monday", "Diana", "Nokia", 500000),
+    ("Tuesday", "Diana", "Samsung", 1500000),
+    ("Wednesday", "Charles", "iPhone", 1200000),
+    ("Thursday", "Alice", "Tecno", 800000),
+    ("Friday", "Diana", "iPhone", 1800000),
+    ("Monday", "Eve", "Samsung", 2000000),
+    ("Tuesday", "Eve", "Tecno", 600000),
+    ("Wednesday", "Eve", "Nokia", 300000),
+    ("Thursday", "Brian", "iPhone", 2200000),
+    ("Friday", "Charles", "Samsung", 900000),
+    ("Monday", "Frank", "Infinix", 700000),
+    ("Tuesday", "Frank", "Nokia", 400000),
+    ("Wednesday", "Frank", "Samsung", 1300000),
+    ("Thursday", "Frank", "Tecno", 500000),
+    ("Friday", "Frank", "iPhone", 1100000),
+    ("Monday", "Grace", "Tecno", 950000),
+    ("Tuesday", "Grace", "Samsung", 850000),
+    ("Wednesday", "Grace", "iPhone", 1000000),
+    ("Thursday", "Grace", "Nokia", 450000),
+    ("Friday", "Grace", "Infinix", 750000)
+]
+
+def process_sales(sales_data):
+    salesperson_total = {}
+    brand_revenue = {}
+    daily_sales = {}
+    
+    for day, salesperson, phone_brand, amount in sales_data:
+        if salesperson not in salesperson_total:
+            salesperson_total[salesperson] = amount
+        else:
+            salesperson_total[salesperson] += amount
+        
+        if phone_brand not in brand_revenue:
+            brand_revenue[phone_brand] = amount
+        else:
+            brand_revenue[phone_brand] += amount
+        
+        if day not in daily_sales:
+            daily_sales[day] = amount
+        else:
+            daily_sales[day] += amount
+    
+    top_performer = max(salesperson_total.items(), key=lambda x: x[1])
+    
+    top_performers = []
+    max_sales = top_performer[1]
+    for salesperson, total in salesperson_total.items():
+        if total == max_sales:
+            top_performers.append(salesperson)
+    
+    bonuses = {}
+    for salesperson in salesperson_total:
+        if salesperson in top_performers:
+            bonuses[salesperson] = 50000
+        else:
+            bonuses[salesperson] = 20000
+    
+    top_brand = max(brand_revenue.items(), key=lambda x: x[1])
+    
+    slow_days = []
+    for day, total in daily_sales.items():
+        if total < 2000000:
+            slow_days.append(day)
+    
+    generate_sales_report(salesperson_total, top_performers, bonuses, brand_revenue, top_brand, daily_sales, slow_days)
+
+def generate_sales_report(salesperson_total, top_performers, bonuses, brand_revenue, top_brand, daily_sales, slow_days):
+    print("=" * 70)
+    print("              WEEKLY SALES PERFORMANCE REPORT")
+    print("=" * 70)
+    
+    print("\n--- TOTAL WEEKLY SALES PER SALESPERSON ---")
+    for salesperson, total in sorted(salesperson_total.items(), key=lambda x: x[1], reverse=True):
+        print(f"{salesperson}: {total:,} UGX")
+    
+    print("\n--- TOP PERFORMING SALESPERSON ---")
+    if len(top_performers) == 1:
+        print(f"TOP PERFORMER: {top_performers[0]} with {salesperson_total[top_performers[0]]:,} UGX")
+    else:
+        print("TIE DETECTED! Top performers are:")
+        for performer in top_performers:
+            print(f"  - {performer} with {salesperson_total[performer]:,} UGX")
+    
+    print("\n--- BONUSES AWARDED ---")
+    for salesperson, bonus in bonuses.items():
+        if bonus == 50000:
+            print(f"TOP PERFORMER BONUS: {salesperson} - {bonus:,} UGX")
+        else:
+            print(f"STANDARD BONUS: {salesperson} - {bonus:,} UGX")
+    
+    print("\n--- REVENUE PER PHONE BRAND ---")
+    for brand, revenue in sorted(brand_revenue.items(), key=lambda x: x[1], reverse=True):
+        print(f"{brand}: {revenue:,} UGX")
+    
+    print("\n--- TOP REVENUE GENERATING BRAND ---")
+    print(f"{top_brand[0]} with {top_brand[1]:,} UGX")
+    
+    print("\n--- DAILY SALES TOTALS ---")
+    for day, total in sorted(daily_sales.items()):
+        print(f"{day}: {total:,} UGX")
+    
+    print("\n--- SLOW DAYS (Below 2,000,000 UGX) ---")
+    if slow_days:
+        for day in slow_days:
+            print(f"{day}: {daily_sales[day]:,} UGX")
+    else:
+        print("No slow days detected.")
+    
+    print("\n" + "=" * 70)
+    print("                    END OF REPORT")
+    print("=" * 70)
+
+print("\n" + "=" * 70)
+print("          RUNNING WITH SUPPLIED DATASET")
+print("=" * 70)
+process_sales(sales)
+
+print("\n\n" + "=" * 70)
+print("          RUNNING WITH ADDITIONAL TEST DATASET")
+print("=" * 70)
+process_sales(sales_test)

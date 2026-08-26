@@ -1,0 +1,20 @@
+Question 6: Design Reflection
+
+Currently, the student data is stored in dictionaries where each student has a 
+name and a nested dictionary of courses with lists of marks. Separate functions 
+like calculate_average(), assign_grade(), and determine_status() operate on this 
+dictionary data by receiving it as parameters.
+
+Python allows us to represent one student as a single programming entity by using 
+classes. A Student class would contain the student's name and courses as attributes 
+(data), and methods like calculate_average(), assign_grade(), and determine_status() 
+as behaviors that operate on that student's own data. Each student would be an 
+object instantiated from the Student class, encapsulating both the state (name, 
+courses, marks) and the operations performed on that state.
+
+This reorganization would make the code more intuitive because instead of passing 
+dictionaries around and calling standalone functions, we would simply call 
+student.calculate_average() or student.determine_status(). The class would handle 
+the logic internally, and each student object would manage its own data. This is 
+the core principle of Object-Oriented Programming: bundling data and the methods 
+that operate on that data into a single unit called an object.
